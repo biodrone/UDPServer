@@ -14,12 +14,11 @@ namespace UDPServer
         public class Vars
         {
             public static string hash = "e9b8240f02d8f1599d85c9496a86f965"; //proper assignment hash
-            public static string logPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory); //desktop
+            public static string logPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test\\udpLog.txt"; //desktop
             public static int crackPos = 0;
         }
         static void Main(string[] args)
         {
-            //github test #2
             //make all the threads
             Thread ThreadHash = null;
             Thread ThreadPos = null; 
@@ -104,7 +103,7 @@ namespace UDPServer
         static void Logger() //not finished
         {
             int i = 0;
-
+            Console.WriteLine(Vars.logPath);
             System.IO.StreamWriter sr = new System.IO.StreamWriter(Vars.logPath); //not appending because the file would be fucking huge
             for (; ; )
             {
