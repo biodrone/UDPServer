@@ -93,14 +93,14 @@ namespace UDPServer
             {
                 IPEndPoint client = new IPEndPoint(IPAddress.Any, 8010);  //open port 8010
                 UdpClient srvListener = new UdpClient();
-                clientPleaser = srvListener.Receive(ref client);
+                clientPleaser = srvListener.Receive(ref client); //this is fucked... FIX IT
                 //next 2 lines should work to convert input from client into an integer !!!RUN IT WITH DEBUG!!!
                 test = Encoding.ASCII.GetString(clientPleaser); //needs to be an int so that it can go into the crackPos and be used
                 Vars.crackPos = Convert.ToInt32(test);
             }
         }
 
-        static void Logger() //not finished
+        static void Logger() //finished
         {
             int i = 0;
             Console.WriteLine(Vars.logPath);
