@@ -3,3 +3,5 @@ D:\Documents\Uni\Year 2\NGC\Assignment\UDPServer\UDPServer\obj\x86\Debug\UDPServ
 D:\Documents\Uni\Year 2\NGC\Assignment\UDPServer\UDPServer\bin\Debug\UDPServer.exe
 D:\Documents\Uni\Year 2\NGC\Assignment\UDPServer\UDPServer\bin\Debug\UDPServer.pdb
 D:\Documents\Uni\Year 2\NGC\Assignment\UDPServer\UDPServer\obj\x86\Debug\UDPServer.csprojResolveAssemblyReference.cache
+D:\Code\UDPServer\obj\x86\Debug\UDPServer.exe
+D:\Code\UDPServer\obj\x86\Debug\UDPServer.pdb

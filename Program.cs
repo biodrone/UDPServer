@@ -19,6 +19,7 @@ namespace UDPServer
         }
         static void Main(string[] args)
         {
+            //github test #2
             //make all the threads
             Thread ThreadHash = null;
             Thread ThreadPos = null; 
