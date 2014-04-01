@@ -98,7 +98,7 @@ namespace UDPServer
             recieveBytes = udpClient3.Receive(ref remoteIPEndPoint);
             returnData = Encoding.ASCII.GetString(recieveBytes);
 
-            if (returnData == "Found")
+            if (returnData == "found")
             {
                 //handle found hash conditions here
             }
