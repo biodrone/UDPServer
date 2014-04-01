@@ -37,7 +37,7 @@ namespace UDPServer
             //start all the threads
             ThreadHash.Start();
             ThreadPos.Start();
-            ThreadListen.Start(); //fucked, fix this maybe use TCP?
+            ThreadListen.Start();
             ThreadLog.Start();
 
             Console.WriteLine("All Threads Started. Cracking Ahoy!");  //needs user feedback to kill threads
@@ -85,20 +85,20 @@ namespace UDPServer
             }
         }
 
-        static void Listener() //NOT FINISHED
+        static void Listener() //finished
         {
 
             UdpClient udpClient3 = new UdpClient(8010);
             string returnData = "";
 
-            Byte[] recieveBytes = new Byte[1024]; // buffer to read the data into 1 kilobyte at a time
-            IPEndPoint remoteIPEndPoint = new IPEndPoint(IPAddress.Any, 8010);  //open port 8009 on this machine
+            Byte[] recieveBytes = new Byte[1024];
+            IPEndPoint remoteIPEndPoint = new IPEndPoint(IPAddress.Any, 8010);
 
             recieveBytes = udpClient3.Receive(ref remoteIPEndPoint);
             returnData = Encoding.ASCII.GetString(recieveBytes);
 
             Vars.crackPos = Convert.ToInt32(returnData);
-            Console.WriteLine("Current Position From Client: " + Vars.crackPos); //position recieved from server
+            Console.WriteLine("Next Offering: " + Vars.crackPos); //position recieved from server
 
             udpClient3.Close();
 
@@ -109,12 +109,18 @@ namespace UDPServer
         {
             for (; ; )
             {
-                System.IO.StreamWriter sr = new System.IO.StreamWriter(Vars.logPath, true);
-                sr.WriteLine(Vars.crackPos.ToString()); //writes current lowest position
-                sr.Close();
+                if (Vars.crackPos != 0) //shouldn't log for 0
+                {
+                    System.IO.StreamWriter sr = new System.IO.StreamWriter(Vars.logPath);
+                    sr.WriteLine(Vars.crackPos.ToString()); //writes current lowest position
+                    sr.Close();
 
-                Thread.Sleep(2000); //dont want to thrash the balls out of the disk
+                    Thread.Sleep(2000); //dont want to thrash the balls out of the disk
+                }
+
+
             }
+            //Logger();
         }
     }
 }
