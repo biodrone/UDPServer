@@ -55,20 +55,20 @@ namespace UDPServer
             Environment.Exit(0);  //kill the application and all threads
         }
 
-        static void sendHash()
-        {
-            for (; ; )
-            {
-                UdpClient udpClient = new UdpClient();
-                IPAddress address = IPAddress.Parse(IPAddress.Broadcast.ToString());  //get broadcast address
-                Byte[] sendBytes = new Byte[1024]; // buffer to read the data into 1 kilobyte at a time
+        //static void sendHash()
+        //{
+        //    for (; ; )
+        //    {
+        //        UdpClient udpClient = new UdpClient();
+        //        IPAddress address = IPAddress.Parse(IPAddress.Broadcast.ToString());  //get broadcast address
+        //        Byte[] sendBytes = new Byte[1024]; // buffer to read the data into 1 kilobyte at a time
 
-                udpClient.Connect(address, 8008); //open a connection to that location on port 8008
-                sendBytes = Encoding.ASCII.GetBytes(Vars.hash);
-                udpClient.Send(sendBytes, sendBytes.GetLength(0)); //send information to the port
-                Thread.Sleep(1000);
-            }
-        }
+        //        udpClient.Connect(address, 8008); //open a connection to that location on port 8008
+        //        sendBytes = Encoding.ASCII.GetBytes(Vars.hash);
+        //        udpClient.Send(sendBytes, sendBytes.GetLength(0)); //send information to the port
+        //        Thread.Sleep(1000);
+        //    }
+        //}
 
         static void sendPos()
         {
