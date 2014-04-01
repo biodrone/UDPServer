@@ -30,7 +30,7 @@ namespace UDPServer
 
             //bind all the threads
             ThreadHash = new Thread(new ThreadStart(sendHash));
-            ThreadPos = new Thread(new ThreadStart(sendPos)); //bind the threads to functions
+            ThreadPos = new Thread(new ThreadStart(sendPos));
             ThreadListen = new Thread(new ThreadStart(Listener));
             ThreadLog = new Thread(new ThreadStart(Logger));
 
