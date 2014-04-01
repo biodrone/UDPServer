@@ -16,6 +16,7 @@ namespace UDPServer
             public static string hash = "e9b8240f02d8f1599d85c9496a86f965"; //proper assignment hash
             public static string logPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test\\udpLog.txt"; //desktop
             public static int crackPos = 0;
+            public static int crackInt = 1000000;
         }
         static void Main(string[] args)
         {
@@ -97,7 +98,16 @@ namespace UDPServer
             recieveBytes = udpClient3.Receive(ref remoteIPEndPoint);
             returnData = Encoding.ASCII.GetString(recieveBytes);
 
-            Vars.crackPos = Convert.ToInt32(returnData);
+            if (returnData == "Found")
+            {
+                //handle found hash conditions here
+            }
+            else
+            {
+                Vars.crackPos = Vars.crackPos + Vars.crackInt;
+            }
+
+            //Vars.crackPos = Convert.ToInt32(returnData);
             Console.WriteLine("Next Offering: " + Vars.crackPos); //position recieved from server
 
             udpClient3.Close();
