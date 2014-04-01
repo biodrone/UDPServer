@@ -36,10 +36,10 @@ namespace UDPServer
             //start all the threads
             ThreadHash.Start();
             ThreadPos.Start();
-            ThreadListen.Start();
+            //ThreadListen.Start();
             ThreadLog.Start();
 
-            Console.WriteLine("All Threads Started. Cracking Ahoy!");  //user feedback
+            Console.WriteLine("All Threads Started. Cracking Ahoy!");  //needs user feedback to kill threads
             Console.ReadLine();
             
             //kill all the threads
@@ -49,19 +49,24 @@ namespace UDPServer
             ThreadLog.Abort();
 
             Console.WriteLine("All Threads Killed. Much Success, Many Hash");
+            Console.ReadLine();
             
             Environment.Exit(0);  //kill the application and all threads
         }
 
         static void sendHash()
         {
-            UdpClient udpClient = new UdpClient();
-            IPAddress address = IPAddress.Parse(IPAddress.Broadcast.ToString());  //get broadcast address
-            Byte[] sendBytes = new Byte[1024]; // buffer to read the data into 1 kilobyte at a time
+            for (; ; )
+            {
+                UdpClient udpClient = new UdpClient();
+                IPAddress address = IPAddress.Parse(IPAddress.Broadcast.ToString());  //get broadcast address
+                Byte[] sendBytes = new Byte[1024]; // buffer to read the data into 1 kilobyte at a time
 
-            udpClient.Connect(address, 8008); //open a connection to that location on port 8008
-            sendBytes = Encoding.ASCII.GetBytes(Vars.hash);
-            udpClient.Send(sendBytes, sendBytes.GetLength(0)); //send information to the port
+                udpClient.Connect(address, 8008); //open a connection to that location on port 8008
+                sendBytes = Encoding.ASCII.GetBytes(Vars.hash);
+                udpClient.Send(sendBytes, sendBytes.GetLength(0)); //send information to the port
+                Thread.Sleep(1000);
+            }
 
             //udpClient.Close();  //dont know where to put this one, maybe need a loop?
         }
@@ -69,7 +74,6 @@ namespace UDPServer
         static void sendPos()
         {
             //this will run having no effect on the main thread
-            //which you are entering text
 
             UdpClient udpClient2 = new UdpClient();
             Byte[] sendBytes = new Byte[1024]; // buffer to send the data 1 Kiltobyte at a time
@@ -113,7 +117,7 @@ namespace UDPServer
                 Thread.Sleep(2000); //dont want to thrash the balls out of the disk
 
                 i++;
-                sr.Close();
+                //sr.Close();
             }
         }
     }
