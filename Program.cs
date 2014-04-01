@@ -15,7 +15,7 @@ namespace UDPServer
         {
             public static string hash = "e9b8240f02d8f1599d85c9496a86f965"; //proper assignment hash
             public static string logPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test\\udpLog.txt"; //desktop
-            public static int crackPos = 5000;
+            public static int crackPos = 0;
         }
         static void Main(string[] args)
         {
@@ -37,7 +37,7 @@ namespace UDPServer
             //start all the threads
             ThreadHash.Start();
             ThreadPos.Start();
-            //ThreadListen.Start();
+            //ThreadListen.Start(); //fucked, fix this maybe use TCP?
             ThreadLog.Start();
 
             Console.WriteLine("All Threads Started. Cracking Ahoy!");  //needs user feedback to kill threads
