@@ -26,6 +26,7 @@ namespace UDPServer
             Thread ThreadLog = null;
             
             Console.WriteLine("Server has Started");
+            Console.WriteLine("HERE COMES THE MOOOOONEEEEEEY");
 
             //bind all the threads
             ThreadHash = new Thread(new ThreadStart(sendHash));
@@ -67,14 +68,10 @@ namespace UDPServer
                 udpClient.Send(sendBytes, sendBytes.GetLength(0)); //send information to the port
                 Thread.Sleep(1000);
             }
-
-            //udpClient.Close();  //dont know where to put this one, maybe need a loop?
         }
 
         static void sendPos()
         {
-            //this will run having no effect on the main thread
-
             UdpClient udpClient2 = new UdpClient();
             Byte[] sendBytes = new Byte[1024]; // buffer to send the data 1 Kiltobyte at a time
             IPAddress address = IPAddress.Parse(IPAddress.Broadcast.ToString());
