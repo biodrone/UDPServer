@@ -11,7 +11,7 @@ namespace UDPServer
 {
     class Program
     {
-        public class Vars
+        public class Vars //place for all the global variables
         {
             public static string hash = "e9b8240f02d8f1599d85c9496a86f965"; //proper assignment hash
             public static string logPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test\\udpLog.txt"; //desktop
@@ -61,26 +61,26 @@ namespace UDPServer
             {
                 UdpClient udpClient = new UdpClient();
                 IPAddress address = IPAddress.Parse(IPAddress.Broadcast.ToString());  //get broadcast address
-                Byte[] sendBytes = new Byte[1024]; // buffer to read the data into 1 kilobyte at a time
+                Byte[] sendBytes = new Byte[1024]; 
 
-                udpClient.Connect(address, 8008); //open a connection to that location on port 8008
+                udpClient.Connect(address, 8008);
                 sendBytes = Encoding.ASCII.GetBytes(Vars.hash);
-                udpClient.Send(sendBytes, sendBytes.GetLength(0)); //send information to the port
-                Thread.Sleep(1000);
+                udpClient.Send(sendBytes, sendBytes.GetLength(0)); //send hash to port 8008 on broadcast
+                Thread.Sleep(1000); //sleep so we don't flood the queue
             }
         }
 
         static void sendPos()
         {
             UdpClient udpClient2 = new UdpClient();
-            Byte[] sendBytes = new Byte[1024]; // buffer to send the data 1 Kiltobyte at a time
+            Byte[] sendBytes = new Byte[1024]; 
             IPAddress address = IPAddress.Parse(IPAddress.Broadcast.ToString());
-            udpClient2.Connect(address, 8009); //open a connection to that location on port 8009
+            udpClient2.Connect(address, 8009);
 
             for (; ; )
             {
                 sendBytes = Encoding.ASCII.GetBytes(Vars.crackPos.ToString()); //sends as string, have to reconvert to int on client end
-                udpClient2.Send(sendBytes, sendBytes.GetLength(0)); //send information to the port
+                udpClient2.Send(sendBytes, sendBytes.GetLength(0)); 
                 Thread.Sleep(1000); //sleep for 1 second
             }
         }
@@ -89,7 +89,7 @@ namespace UDPServer
         {
             Byte[] clientPleaser = new Byte[1024];
             string test = "";
-
+            //do this in TCP
             for (; ; )
             {
                 IPEndPoint client = new IPEndPoint(IPAddress.Any, 8010);  //open port 8010
