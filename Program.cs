@@ -15,7 +15,7 @@ namespace UDPServer
         {
             public static string hash = "e9b8240f02d8f1599d85c9496a86f965"; //proper assignment hash
             public static string logPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test\\udpLog.txt"; //desktop
-            public static int crackPos = 0;
+            public static int crackPos = 5000;
         }
         static void Main(string[] args)
         {
@@ -26,20 +26,21 @@ namespace UDPServer
             Thread ThreadLog = null;
             
             Console.WriteLine("Server has Started");
+            Console.WriteLine("HERE COMES THE MOOOOONEEEEEEY");
 
             //bind all the threads
             ThreadHash = new Thread(new ThreadStart(sendHash));
-            ThreadPos = new Thread(new ThreadStart(sendPos)); //bind the threads to functions
+            ThreadPos = new Thread(new ThreadStart(sendPos));
             ThreadListen = new Thread(new ThreadStart(Listener));
             ThreadLog = new Thread(new ThreadStart(Logger));
 
             //start all the threads
             ThreadHash.Start();
             ThreadPos.Start();
-            ThreadListen.Start();
+            //ThreadListen.Start();
             ThreadLog.Start();
 
-            Console.WriteLine("All Threads Started. Cracking Ahoy!");  //user feedback
+            Console.WriteLine("All Threads Started. Cracking Ahoy!");  //needs user feedback to kill threads
             Console.ReadLine();
             
             //kill all the threads
@@ -49,28 +50,28 @@ namespace UDPServer
             ThreadLog.Abort();
 
             Console.WriteLine("All Threads Killed. Much Success, Many Hash");
+            Console.ReadLine();
             
             Environment.Exit(0);  //kill the application and all threads
         }
 
         static void sendHash()
         {
-            UdpClient udpClient = new UdpClient();
-            IPAddress address = IPAddress.Parse(IPAddress.Broadcast.ToString());  //get broadcast address
-            Byte[] sendBytes = new Byte[1024]; // buffer to read the data into 1 kilobyte at a time
+            for (; ; )
+            {
+                UdpClient udpClient = new UdpClient();
+                IPAddress address = IPAddress.Parse(IPAddress.Broadcast.ToString());  //get broadcast address
+                Byte[] sendBytes = new Byte[1024]; // buffer to read the data into 1 kilobyte at a time
 
-            udpClient.Connect(address, 8008); //open a connection to that location on port 8008
-            sendBytes = Encoding.ASCII.GetBytes(Vars.hash);
-            udpClient.Send(sendBytes, sendBytes.GetLength(0)); //send information to the port
-
-            //udpClient.Close();  //dont know where to put this one, maybe need a loop?
+                udpClient.Connect(address, 8008); //open a connection to that location on port 8008
+                sendBytes = Encoding.ASCII.GetBytes(Vars.hash);
+                udpClient.Send(sendBytes, sendBytes.GetLength(0)); //send information to the port
+                Thread.Sleep(1000);
+            }
         }
 
         static void sendPos()
         {
-            //this will run having no effect on the main thread
-            //which you are entering text
-
             UdpClient udpClient2 = new UdpClient();
             Byte[] sendBytes = new Byte[1024]; // buffer to send the data 1 Kiltobyte at a time
             IPAddress address = IPAddress.Parse(IPAddress.Broadcast.ToString());
@@ -80,7 +81,7 @@ namespace UDPServer
             {
                 sendBytes = Encoding.ASCII.GetBytes(Vars.crackPos.ToString()); //sends as string, have to reconvert to int on client end
                 udpClient2.Send(sendBytes, sendBytes.GetLength(0)); //send information to the port
-                Thread.Sleep(1000);//sleep for 1 second
+                Thread.Sleep(1000); //sleep for 1 second
             }
         }
 
@@ -113,7 +114,7 @@ namespace UDPServer
                 Thread.Sleep(2000); //dont want to thrash the balls out of the disk
 
                 i++;
-                sr.Close();
+                //sr.Close();
             }
         }
     }
