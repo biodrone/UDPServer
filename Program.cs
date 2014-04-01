@@ -104,7 +104,6 @@ namespace UDPServer
         static void Logger() //finished
         {
             int i = 0;
-            Console.WriteLine(Vars.logPath);
             System.IO.StreamWriter sr = new System.IO.StreamWriter(Vars.logPath); //not appending because the file would be fucking huge
             for (; ; )
             {
