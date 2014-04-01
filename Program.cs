@@ -103,18 +103,13 @@ namespace UDPServer
 
         static void Logger() //finished
         {
-            int i = 0;
-            Console.WriteLine(Vars.logPath);
-            System.IO.StreamWriter sr = new System.IO.StreamWriter(Vars.logPath); //not appending because the file would be fucking huge
             for (; ; )
             {
-                
+                System.IO.StreamWriter sr = new System.IO.StreamWriter(Vars.logPath, true);
                 sr.WriteLine(Vars.crackPos.ToString()); //writes current lowest position
-                sr.WriteLine(i);
-                Thread.Sleep(2000); //dont want to thrash the balls out of the disk
+                sr.Close();
 
-                i++;
-                //sr.Close();
+                Thread.Sleep(2000); //dont want to thrash the balls out of the disk
             }
         }
     }
