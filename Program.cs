@@ -15,7 +15,7 @@ namespace UDPServer
         {
             public static string hash = "e9b8240f02d8f1599d85c9496a86f965"; //proper assignment hash
             public static string logPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test\\udpLog.txt"; //desktop
-            public static int crackPos = 0;
+            public static int crackPos = 5000;
         }
         static void Main(string[] args)
         {
@@ -81,7 +81,7 @@ namespace UDPServer
             {
                 sendBytes = Encoding.ASCII.GetBytes(Vars.crackPos.ToString()); //sends as string, have to reconvert to int on client end
                 udpClient2.Send(sendBytes, sendBytes.GetLength(0)); //send information to the port
-                Thread.Sleep(1000);//sleep for 1 second
+                Thread.Sleep(1000); //sleep for 1 second
             }
         }
 
