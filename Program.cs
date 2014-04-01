@@ -37,7 +37,7 @@ namespace UDPServer
             //start all the threads
             ThreadHash.Start();
             ThreadPos.Start();
-            //ThreadListen.Start(); //fucked, fix this maybe use TCP?
+            ThreadListen.Start(); //fucked, fix this maybe use TCP?
             ThreadLog.Start();
 
             Console.WriteLine("All Threads Started. Cracking Ahoy!");  //needs user feedback to kill threads
@@ -70,7 +70,7 @@ namespace UDPServer
             }
         }
 
-        static void sendPos()
+        static void sendPos() //finished
         {
             UdpClient udpClient2 = new UdpClient();
             Byte[] sendBytes = new Byte[1024]; 
@@ -85,20 +85,24 @@ namespace UDPServer
             }
         }
 
-        static void Listener() //to listen for messages from clients
+        static void Listener() //NOT FINISHED
         {
-            Byte[] clientPleaser = new Byte[1024];
-            string test = "";
-            //do this in TCP
-            for (; ; )
-            {
-                IPEndPoint client = new IPEndPoint(IPAddress.Any, 8010);  //open port 8010
-                UdpClient srvListener = new UdpClient();
-                clientPleaser = srvListener.Receive(ref client); //this is fucked... FIX IT
-                
-                test = Encoding.ASCII.GetString(clientPleaser); //needs to be an int so that it can go into the crackPos and be used
-                Vars.crackPos = Convert.ToInt32(test);
-            }
+
+            UdpClient udpClient3 = new UdpClient(8010);
+            string returnData = "";
+
+            Byte[] recieveBytes = new Byte[1024]; // buffer to read the data into 1 kilobyte at a time
+            IPEndPoint remoteIPEndPoint = new IPEndPoint(IPAddress.Any, 8010);  //open port 8009 on this machine
+
+            recieveBytes = udpClient3.Receive(ref remoteIPEndPoint);
+            returnData = Encoding.ASCII.GetString(recieveBytes);
+
+            Vars.crackPos = Convert.ToInt32(returnData);
+            Console.WriteLine("Current Position From Client: " + Vars.crackPos); //position recieved from server
+
+            udpClient3.Close();
+
+            Listener();
         }
 
         static void Logger() //finished
