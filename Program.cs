@@ -102,6 +102,7 @@ namespace UDPServer
             if (returnData == "found")
             {
                 //handle found hash conditions here
+
             }
             else
             {
@@ -109,7 +110,7 @@ namespace UDPServer
             }
 
             //Vars.crackPos = Convert.ToInt32(returnData);
-            Console.WriteLine("Next Offering: " + Vars.crackPos); //position recieved from server
+            Console.WriteLine("Next Offering: " + Vars.crackPos); //position recieved from client + 1mil
 
             udpClient3.Close();
 
