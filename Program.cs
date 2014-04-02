@@ -26,7 +26,7 @@ namespace UDPServer
             Thread ThreadHash = null;
             Thread ThreadPos = null; 
             Thread ThreadListen = null;
-            Thread ThreadLog = null;
+            //Thread ThreadLog = null;
             
             Console.WriteLine("Server has Started");
             Console.WriteLine("HERE COMES THE MOOOOONEEEEEEY");
@@ -35,13 +35,13 @@ namespace UDPServer
             ThreadHash = new Thread(new ThreadStart(sendHash));
             ThreadPos = new Thread(new ThreadStart(sendPos));
             ThreadListen = new Thread(new ThreadStart(Listener));
-            ThreadLog = new Thread(new ThreadStart(Logger));
+            //ThreadLog = new Thread(new ThreadStart(Logger));
 
             //start all the threads
             ThreadHash.Start();
             ThreadPos.Start();
             ThreadListen.Start();
-            ThreadLog.Start();
+            //ThreadLog.Start();
 
             Console.WriteLine("All Threads Started. Cracking Ahoy!");  //needs user feedback to kill threads
             Console.ReadLine();
@@ -50,7 +50,7 @@ namespace UDPServer
             ThreadHash.Abort();
             ThreadPos.Abort();
             ThreadListen.Abort();
-            ThreadLog.Abort();
+            //ThreadLog.Abort();
 
             Console.WriteLine("All Threads Killed. Much Success, Many Hash");
             Console.ReadLine();
@@ -104,6 +104,7 @@ namespace UDPServer
             if (returnData.Substring(0, 4) == "next")
             {
                 Vars.crackPos = Vars.crackPos + Vars.crackInt;
+                Log("Sent to Client: " + Vars.crackPos.ToString());
                 
                 //handle found hash conditions here
                 //split the string recieved from client to find the cleartext
@@ -111,6 +112,7 @@ namespace UDPServer
             else
             {
                 Console.WriteLine("FOUND BITCH");
+                Log("Hash Found: " + returnData.Substring(6).ToString());
                 Thread.CurrentThread.Abort();
             }
 
@@ -122,19 +124,11 @@ namespace UDPServer
             Listener();
         }
 
-        static void Logger()
+        static void Log(string data)
         {
-            for (; ; )
-            {
-                if (Vars.crackPos != 0) //shouldn't log for 0
-                {
-                    System.IO.StreamWriter sr = new System.IO.StreamWriter(Vars.logPath);
-                    sr.WriteLine(Vars.crackPos.ToString()); //writes current lowest position
-                    sr.Close();
-
-                    Thread.Sleep(2000); //dont want to thrash the balls out of the disk
-                }
-            }
+            System.IO.StreamWriter sr = new System.IO.StreamWriter(Vars.logPath, true);
+            sr.WriteLine(data); //writes current lowest position
+            sr.Close();
         }
     }
 }
