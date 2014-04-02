@@ -13,7 +13,8 @@ namespace UDPServer
     {
         public class Vars //place for all the global variables
         {
-            public static string hash = "e9b8240f02d8f1599d85c9496a86f965"; //proper assignment hash
+            //public static string hash = "e9b8240f02d8f1599d85c9496a86f965"; //proper assignment hash - 412819815
+            public static string hash = "fcea920f7412b5da7be0cf42b8c93759"; //proper assignment hash - 412819815
             public static string logPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test\\udpLog.txt"; //desktop
             public static int crackPos = 0;
             public static int crackInt = 1000000;
@@ -72,7 +73,7 @@ namespace UDPServer
             }
         }
 
-        static void sendPos() //finished
+        static void sendPos() 
         {
             UdpClient udpClient2 = new UdpClient();
             Byte[] sendBytes = new Byte[1024]; 
@@ -87,7 +88,7 @@ namespace UDPServer
             }
         }
 
-        static void Listener() //finished
+        static void Listener() 
         {
 
             UdpClient udpClient3 = new UdpClient(8010);
@@ -98,15 +99,19 @@ namespace UDPServer
 
             recieveBytes = udpClient3.Receive(ref remoteIPEndPoint);
             returnData = Encoding.ASCII.GetString(recieveBytes);
+            Console.WriteLine(returnData);
 
-            if (returnData == "found")
+            if (returnData.Substring(0, 4) == "next")
             {
+                Vars.crackPos = Vars.crackPos + Vars.crackInt;
+                
                 //handle found hash conditions here
-
+                //split the string recieved from client to find the cleartext
             }
             else
             {
-                Vars.crackPos = Vars.crackPos + Vars.crackInt;
+                Console.WriteLine("FOUND BITCH");
+                Thread.CurrentThread.Abort();
             }
 
             //Vars.crackPos = Convert.ToInt32(returnData);
@@ -117,7 +122,7 @@ namespace UDPServer
             Listener();
         }
 
-        static void Logger() //finished
+        static void Logger()
         {
             for (; ; )
             {
