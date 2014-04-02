@@ -8,3 +8,8 @@ D:\Code\UDPServer\obj\x86\Debug\UDPServer.pdb
 D:\Code\UDPServer\bin\Debug\UDPServer.exe
 D:\Code\UDPServer\bin\Debug\UDPServer.pdb
 D:\Code\UDPServer\obj\x86\Debug\UDPServer.csprojResolveAssemblyReference.cache
+C:\Code\UDPServer\obj\x86\Debug\UDPServer.exe
+C:\Code\UDPServer\obj\x86\Debug\UDPServer.pdb
+C:\Code\UDPServer\bin\Debug\UDPServer.exe
+C:\Code\UDPServer\bin\Debug\UDPServer.pdb
+C:\Code\UDPServer\obj\x86\Debug\UDPServer.csprojResolveAssemblyReference.cache

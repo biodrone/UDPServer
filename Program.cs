@@ -11,12 +11,14 @@ namespace UDPServer
 {
     class Program
     {
-        public class Vars
+        public class Vars //place for all the global variables
         {
             public static string hash = "e9b8240f02d8f1599d85c9496a86f965"; //proper assignment hash
             public static string logPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test\\udpLog.txt"; //desktop
             public static int crackPos = 0;
+            public static int crackInt = 1000000;
         }
+
         static void Main(string[] args)
         {
             //make all the threads
@@ -26,10 +28,11 @@ namespace UDPServer
             Thread ThreadLog = null;
             
             Console.WriteLine("Server has Started");
+            Console.WriteLine("HERE COMES THE MOOOOONEEEEEEY");
 
             //bind all the threads
             ThreadHash = new Thread(new ThreadStart(sendHash));
-            ThreadPos = new Thread(new ThreadStart(sendPos)); //bind the threads to functions
+            ThreadPos = new Thread(new ThreadStart(sendPos));
             ThreadListen = new Thread(new ThreadStart(Listener));
             ThreadLog = new Thread(new ThreadStart(Logger));
 
@@ -39,7 +42,7 @@ namespace UDPServer
             ThreadListen.Start();
             ThreadLog.Start();
 
-            Console.WriteLine("All Threads Started. Cracking Ahoy!");  //user feedback
+            Console.WriteLine("All Threads Started. Cracking Ahoy!");  //needs user feedback to kill threads
             Console.ReadLine();
             
             //kill all the threads
@@ -49,71 +52,83 @@ namespace UDPServer
             ThreadLog.Abort();
 
             Console.WriteLine("All Threads Killed. Much Success, Many Hash");
+            Console.ReadLine();
             
             Environment.Exit(0);  //kill the application and all threads
         }
 
         static void sendHash()
         {
-            UdpClient udpClient = new UdpClient();
-            IPAddress address = IPAddress.Parse(IPAddress.Broadcast.ToString());  //get broadcast address
-            Byte[] sendBytes = new Byte[1024]; // buffer to read the data into 1 kilobyte at a time
+            for (; ; )
+            {
+                UdpClient udpClient = new UdpClient();
+                IPAddress address = IPAddress.Parse(IPAddress.Broadcast.ToString());  //get broadcast address
+                Byte[] sendBytes = new Byte[1024]; 
 
-            udpClient.Connect(address, 8008); //open a connection to that location on port 8008
-            sendBytes = Encoding.ASCII.GetBytes(Vars.hash);
-            udpClient.Send(sendBytes, sendBytes.GetLength(0)); //send information to the port
-
-            //udpClient.Close();  //dont know where to put this one, maybe need a loop?
+                udpClient.Connect(address, 8008);
+                sendBytes = Encoding.ASCII.GetBytes(Vars.hash);
+                udpClient.Send(sendBytes, sendBytes.GetLength(0)); //send hash to port 8008 on broadcast
+                Thread.Sleep(1000); //sleep so we don't flood the queue
+            }
         }
 
-        static void sendPos()
+        static void sendPos() //finished
         {
-            //this will run having no effect on the main thread
-            //which you are entering text
-
             UdpClient udpClient2 = new UdpClient();
-            Byte[] sendBytes = new Byte[1024]; // buffer to send the data 1 Kiltobyte at a time
+            Byte[] sendBytes = new Byte[1024]; 
             IPAddress address = IPAddress.Parse(IPAddress.Broadcast.ToString());
-            udpClient2.Connect(address, 8009); //open a connection to that location on port 8009
+            udpClient2.Connect(address, 8009);
 
             for (; ; )
             {
                 sendBytes = Encoding.ASCII.GetBytes(Vars.crackPos.ToString()); //sends as string, have to reconvert to int on client end
-                udpClient2.Send(sendBytes, sendBytes.GetLength(0)); //send information to the port
-                Thread.Sleep(1000);//sleep for 1 second
+                udpClient2.Send(sendBytes, sendBytes.GetLength(0)); 
+                Thread.Sleep(1000); //sleep for 1 second
             }
         }
 
-        static void Listener() //to listen for messages from clients
+        static void Listener() //finished
         {
-            Byte[] clientPleaser = new Byte[1024];
-            string test = "";
 
-            for (; ; )
+            UdpClient udpClient3 = new UdpClient(8010);
+            string returnData = "";
+
+            Byte[] recieveBytes = new Byte[1024];
+            IPEndPoint remoteIPEndPoint = new IPEndPoint(IPAddress.Any, 8010);
+
+            recieveBytes = udpClient3.Receive(ref remoteIPEndPoint);
+            returnData = Encoding.ASCII.GetString(recieveBytes);
+
+            if (returnData == "found")
             {
-                IPEndPoint client = new IPEndPoint(IPAddress.Any, 8010);  //open port 8010
-                UdpClient srvListener = new UdpClient();
-                clientPleaser = srvListener.Receive(ref client); //this is fucked... FIX IT
-                //next 2 lines should work to convert input from client into an integer !!!RUN IT WITH DEBUG!!!
-                test = Encoding.ASCII.GetString(clientPleaser); //needs to be an int so that it can go into the crackPos and be used
-                Vars.crackPos = Convert.ToInt32(test);
+                //handle found hash conditions here
+
             }
+            else
+            {
+                Vars.crackPos = Vars.crackPos + Vars.crackInt;
+            }
+
+            //Vars.crackPos = Convert.ToInt32(returnData);
+            Console.WriteLine("Next Offering: " + Vars.crackPos); //position recieved from client + 1mil
+
+            udpClient3.Close();
+
+            Listener();
         }
 
         static void Logger() //finished
         {
-            int i = 0;
-            Console.WriteLine(Vars.logPath);
-            System.IO.StreamWriter sr = new System.IO.StreamWriter(Vars.logPath); //not appending because the file would be fucking huge
             for (; ; )
             {
-                
-                sr.WriteLine(Vars.crackPos.ToString()); //writes current lowest position
-                sr.WriteLine(i);
-                Thread.Sleep(2000); //dont want to thrash the balls out of the disk
+                if (Vars.crackPos != 0) //shouldn't log for 0
+                {
+                    System.IO.StreamWriter sr = new System.IO.StreamWriter(Vars.logPath);
+                    sr.WriteLine(Vars.crackPos.ToString()); //writes current lowest position
+                    sr.Close();
 
-                i++;
-                sr.Close();
+                    Thread.Sleep(2000); //dont want to thrash the balls out of the disk
+                }
             }
         }
     }
