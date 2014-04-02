@@ -117,11 +117,6 @@ namespace UDPServer
 
         static void Logger() //finished
         {
-<<<<<<< HEAD
-            int i = 0;
-            System.IO.StreamWriter sr = new System.IO.StreamWriter(Vars.logPath); //not appending because the file would be fucking huge
-=======
->>>>>>> aa963a9e6721281fdc465083e8139e3c3c070094
             for (; ; )
             {
                 if (Vars.crackPos != 0) //shouldn't log for 0
@@ -132,10 +127,7 @@ namespace UDPServer
 
                     Thread.Sleep(2000); //dont want to thrash the balls out of the disk
                 }
-
-
             }
-            //Logger();
         }
     }
 }
