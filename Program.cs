@@ -82,7 +82,7 @@ namespace UDPServer
 
             for (; ; )
             {
-                sendBytes = Encoding.ASCII.GetBytes(Vars.crackPos.ToString()); //sends as string, have to reconvert to int on client end
+                sendBytes = Encoding.ASCII.GetBytes(Vars.crackPos.ToString());
                 udpClient2.Send(sendBytes, sendBytes.GetLength(0)); 
                 Thread.Sleep(1000); //sleep for 1 second
             }
