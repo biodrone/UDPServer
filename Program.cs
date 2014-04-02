@@ -18,6 +18,7 @@ namespace UDPServer
             public static int crackPos = 0;
             public static int crackInt = 1000000;
         }
+
         static void Main(string[] args)
         {
             //make all the threads
