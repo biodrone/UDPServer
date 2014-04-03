@@ -22,38 +22,45 @@ namespace UDPServer
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Server has Started");
+            try
+            {
+                Console.WriteLine("Server has Started");
 
-            //check if there is already a log
-            logCheck();
+                //check if there is already a log
+                logCheck();
 
-            //make all the threads
-            Thread hashThread = null;
-            Thread posThread = null; 
-            Thread listenThread = null;
+                //make all the threads
+                Thread hashThread = null;
+                Thread posThread = null;
+                Thread listenThread = null;
 
-            //bind all the threads
-            hashThread = new Thread(new ThreadStart(sendHash));
-            posThread = new Thread(new ThreadStart(sendPos));
-            listenThread = new Thread(new ThreadStart(Listener));
+                //bind all the threads
+                hashThread = new Thread(new ThreadStart(sendHash));
+                posThread = new Thread(new ThreadStart(sendPos));
+                listenThread = new Thread(new ThreadStart(Listener));
 
-            //start all the threads
-            hashThread.Start();
-            posThread.Start();
-            listenThread.Start();
+                //start all the threads
+                hashThread.Start();
+                posThread.Start();
+                listenThread.Start();
 
-            Console.WriteLine("All Threads Started. Cracking Ahoy!");  //needs user feedback to kill threads
-            Console.ReadLine();
-            
-            //kill all the threads
-            hashThread.Abort();
-            posThread.Abort();
-            listenThread.Abort();
+                Console.WriteLine("All Threads Started. Cracking Ahoy!");  //needs user feedback to kill threads
+                Console.ReadLine();
 
-            Console.WriteLine("All Threads Killed. Much Success, Many Hash");
-            Console.ReadLine();
-            
-            Environment.Exit(0);  //kill the application and all threads
+                //kill all the threads
+                hashThread.Abort();
+                posThread.Abort();
+                listenThread.Abort();
+
+                Console.WriteLine("All Threads Killed. Much Success, Many Hash");
+                Console.ReadLine();
+
+                Environment.Exit(0);  //kill the application and all threads
+            }
+            catch
+            {
+                Console.WriteLine("Main Failed. Issue is Probably Thread Related.");
+            }
         }
 
         static void logCheck()
@@ -75,18 +82,24 @@ namespace UDPServer
 
         static void sendHash()
         {
-            
+            try
+            {
                 UdpClient hashSender = new UdpClient();
                 IPAddress bcAddress = IPAddress.Parse(IPAddress.Broadcast.ToString());  //get broadcast address
                 Byte[] sendBytes = new Byte[1024];
 
-           for (; ; )
-           {
+                for (; ; )
+                {
 
-                hashSender.Connect(bcAddress, 8008);
-                sendBytes = Encoding.ASCII.GetBytes(Vars.hash);
-                hashSender.Send(sendBytes, sendBytes.GetLength(0)); //send hash to port 8008
-                Thread.Sleep(1000); //sleep so we don't flood the queue
+                    hashSender.Connect(bcAddress, 8008);
+                    sendBytes = Encoding.ASCII.GetBytes(Vars.hash);
+                    hashSender.Send(sendBytes, sendBytes.GetLength(0)); //send hash to port 8008
+                    Thread.Sleep(1000); //sleep so we don't flood the queue
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Sending the Hash Failed.");
             }
         }
 
@@ -108,7 +121,7 @@ namespace UDPServer
             }
             catch
             {
-                Console.WriteLine("Sending Position Failed");
+                Console.WriteLine("Sending Position Failed.");
             }
         }
 
@@ -144,8 +157,8 @@ namespace UDPServer
             }
             catch
             {
-                Console.WriteLine("Program Crash: Incorrect Data Received From Client on Port 8010");
-                Log("Program Crash: Incorrect Data Received From Client on Port 8010");
+                Console.WriteLine("Program Crash: Incorrect Data Received From Client on Port 8010.");
+                Log("Program Crash: Incorrect Data Received From Client on Port 8010.");
             }
         }
 
@@ -159,7 +172,7 @@ namespace UDPServer
             }
             catch
             {
-                Console.WriteLine("Logging Failed");
+                Console.WriteLine("Logging Failed.");
             }
         }
     }
