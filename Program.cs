@@ -22,6 +22,8 @@ namespace UDPServer
 
         static void Main(string[] args)
         {
+            Console.WriteLine("Server has Started");
+
             //check if there is already a log
             logCheck();
 
@@ -29,8 +31,6 @@ namespace UDPServer
             Thread hashThread = null;
             Thread posThread = null; 
             Thread listenThread = null;
-            
-            Console.WriteLine("Server has Started");
 
             //bind all the threads
             hashThread = new Thread(new ThreadStart(sendHash));
@@ -58,9 +58,17 @@ namespace UDPServer
 
         static void logCheck()
         {
-            if (File.Exists(Vars.logPath))
+            try
             {
-                Vars.crackPos = Convert.ToInt32(File.ReadLines(Vars.logPath).Last().Substring(9));
+
+                if (File.Exists(Vars.logPath))
+                {
+                    Vars.crackPos = Convert.ToInt32(File.ReadLines(Vars.logPath).Last().Substring(9));
+                }
+            }
+            catch
+            {
+                Console.WriteLine("#####Log File Exists With Hash Already Cracked. Check For Clear Text!#####");
             }
         }
 
