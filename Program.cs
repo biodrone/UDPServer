@@ -26,7 +26,6 @@ namespace UDPServer
             Thread ThreadHash = null;
             Thread ThreadPos = null; 
             Thread ThreadListen = null;
-            //Thread ThreadLog = null;
             
             Console.WriteLine("Server has Started");
             Console.WriteLine("HERE COMES THE MOOOOONEEEEEEY");
@@ -35,13 +34,11 @@ namespace UDPServer
             ThreadHash = new Thread(new ThreadStart(sendHash));
             ThreadPos = new Thread(new ThreadStart(sendPos));
             ThreadListen = new Thread(new ThreadStart(Listener));
-            //ThreadLog = new Thread(new ThreadStart(Logger));
 
             //start all the threads
             ThreadHash.Start();
             ThreadPos.Start();
             ThreadListen.Start();
-            //ThreadLog.Start();
 
             Console.WriteLine("All Threads Started. Cracking Ahoy!");  //needs user feedback to kill threads
             Console.ReadLine();
@@ -50,7 +47,6 @@ namespace UDPServer
             ThreadHash.Abort();
             ThreadPos.Abort();
             ThreadListen.Abort();
-            //ThreadLog.Abort();
 
             Console.WriteLine("All Threads Killed. Much Success, Many Hash");
             Console.ReadLine();
