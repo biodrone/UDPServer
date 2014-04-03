@@ -107,32 +107,39 @@ namespace UDPServer
 
         static void Listener() 
         {
-            UdpClient cliListener = new UdpClient(8010);
-            string returnData = "";
-
-            Byte[] recieveBytes = new Byte[1024];
-            IPEndPoint listenerEndPoint = new IPEndPoint(IPAddress.Any, 8010);
-
-            recieveBytes = cliListener.Receive(ref listenerEndPoint);
-            returnData = Encoding.ASCII.GetString(recieveBytes);
-            
-            if (returnData.Substring(0, 4) == "next") //check if the client has found the hash
+            try
             {
-                Vars.crackPos = Vars.crackPos + Vars.crackInt;
-                Log("Position: " + Vars.crackPos.ToString()); //log on position recieved
+                UdpClient cliListener = new UdpClient(8010);
+                string returnData = "";
+                Byte[] recieveBytes = new Byte[1024];
+                IPEndPoint listenerEndPoint = new IPEndPoint(IPAddress.Any, 8010);
+
+                recieveBytes = cliListener.Receive(ref listenerEndPoint);
+                returnData = Encoding.ASCII.GetString(recieveBytes);
+
+                if (returnData.Substring(0, 4) == "next") //check if the client has found the hash
+                {
+                    Vars.crackPos = Vars.crackPos + Vars.crackInt;
+                    Log("Position: " + Vars.crackPos.ToString()); //log on position recieved
+                }
+                else
+                {
+                    Log("Hash Found: " + returnData.Substring(6).ToString()); //log on hash found
+                    Console.WriteLine("Hash Found: " + returnData.Substring(6).ToString());
+                    Vars.hash = "found"; //sets the hash to found so that the clients abort
+                    Thread.CurrentThread.Abort(); //kill the thread
+                }
+
+                Console.WriteLine("Next Offering: " + Vars.crackPos); //position offered to the next client that connects
+
+                cliListener.Close();
+                Listener(); //recursive call
             }
-            else
+            catch
             {
-                Log("Hash Found: " + returnData.Substring(6).ToString()); //log on hash found
-                Console.WriteLine("Hash Found: " + returnData.Substring(6).ToString());
-                Vars.hash = "found"; //sets the hash to found so that the clients abort
-                Thread.CurrentThread.Abort(); //kill the thread
+                Console.WriteLine("Program Crash: Incorrect Data Received From Client on Port 8010");
+                Log("Program Crash: Incorrect Data Received From Client on Port 8010");
             }
-
-            Console.WriteLine("Next Offering: " + Vars.crackPos); //position offered to the next client that connects
-
-            cliListener.Close();
-            Listener(); //recursive call
         }
 
         static void Log(string data)
