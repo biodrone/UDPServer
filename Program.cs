@@ -92,16 +92,23 @@ namespace UDPServer
 
         static void sendPos() 
         {
-            UdpClient posSender = new UdpClient();
-            Byte[] sendBytes = new Byte[1024]; 
-            IPAddress bcAddress = IPAddress.Parse(IPAddress.Broadcast.ToString());
-            posSender.Connect(bcAddress, 8009);
-
-            for (; ; )
+            try
             {
-                sendBytes = Encoding.ASCII.GetBytes(Vars.crackPos.ToString());
-                posSender.Send(sendBytes, sendBytes.GetLength(0)); 
-                Thread.Sleep(1000); //sleep for 1 second
+                UdpClient posSender = new UdpClient();
+                Byte[] sendBytes = new Byte[1024];
+                IPAddress bcAddress = IPAddress.Parse(IPAddress.Broadcast.ToString());
+                posSender.Connect(bcAddress, 8009);
+
+                for (; ; )
+                {
+                    sendBytes = Encoding.ASCII.GetBytes(Vars.crackPos.ToString());
+                    posSender.Send(sendBytes, sendBytes.GetLength(0));
+                    Thread.Sleep(1000); //sleep for 1 second
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Sending Position Failed");
             }
         }
 
