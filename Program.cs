@@ -44,7 +44,7 @@ namespace UDPServer
                 posThread.Start();
                 listenThread.Start();
 
-                Console.WriteLine("All Threads Started. Cracking Ahoy!");  //needs user feedback to kill threads
+                Console.WriteLine("Waiting for Clients to Connect.............");  //needs user feedback to kill threads
                 Console.ReadLine();
 
                 //kill all the threads
@@ -52,7 +52,7 @@ namespace UDPServer
                 posThread.Abort();
                 listenThread.Abort();
 
-                Console.WriteLine("All Threads Killed. Much Success, Many Hash");
+                Console.WriteLine("All Threads Killed. Goodbye.");
                 Console.ReadLine();
 
                 Environment.Exit(0);  //kill the application and all threads
