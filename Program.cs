@@ -103,6 +103,7 @@ namespace UDPServer
             {
                 Log("Hash Found: " + returnData.Substring(6).ToString()); //log on hash found
                 Console.WriteLine("Hash Found: " + returnData.Substring(6).ToString());
+                Vars.hash = "found"; //sets the hash to found so that the clients abort
                 Thread.CurrentThread.Abort(); //kill the thread
             }
 
