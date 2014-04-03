@@ -75,11 +75,13 @@ namespace UDPServer
 
         static void sendHash()
         {
-            for (; ; )
-            {
+            
                 UdpClient hashSender = new UdpClient();
                 IPAddress bcAddress = IPAddress.Parse(IPAddress.Broadcast.ToString());  //get broadcast address
-                Byte[] sendBytes = new Byte[1024]; 
+                Byte[] sendBytes = new Byte[1024];
+
+           for (; ; )
+           {
 
                 hashSender.Connect(bcAddress, 8008);
                 sendBytes = Encoding.ASCII.GetBytes(Vars.hash);
