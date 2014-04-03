@@ -15,7 +15,7 @@ namespace UDPServer
         {
             //public static string hash = "e9b8240f02d8f1599d85c9496a86f965"; //proper assignment hash - 412819815
             public static string hash = "fcea920f7412b5da7be0cf42b8c93759"; //1234567
-            public static string logPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test\\udpLog.txt"; //desktop
+            public static string logPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test\\udpLog.txt";
             public static int crackPos = 0;
             public static int crackInt = 1000000;
         }
@@ -23,29 +23,29 @@ namespace UDPServer
         static void Main(string[] args)
         {
             //make all the threads
-            Thread ThreadHash = null;
-            Thread ThreadPos = null; 
-            Thread ThreadListen = null;
+            Thread hashThread = null;
+            Thread posThread = null; 
+            Thread listenThread = null;
             
             Console.WriteLine("Server has Started");
 
             //bind all the threads
-            ThreadHash = new Thread(new ThreadStart(sendHash));
-            ThreadPos = new Thread(new ThreadStart(sendPos));
-            ThreadListen = new Thread(new ThreadStart(Listener));
+            hashThread = new Thread(new ThreadStart(sendHash));
+            posThread = new Thread(new ThreadStart(sendPos));
+            listenThread = new Thread(new ThreadStart(Listener));
 
             //start all the threads
-            ThreadHash.Start();
-            ThreadPos.Start();
-            ThreadListen.Start();
+            hashThread.Start();
+            posThread.Start();
+            listenThread.Start();
 
             Console.WriteLine("All Threads Started. Cracking Ahoy!");  //needs user feedback to kill threads
             Console.ReadLine();
             
             //kill all the threads
-            ThreadHash.Abort();
-            ThreadPos.Abort();
-            ThreadListen.Abort();
+            hashThread.Abort();
+            posThread.Abort();
+            listenThread.Abort();
 
             Console.WriteLine("All Threads Killed. Much Success, Many Hash");
             Console.ReadLine();
@@ -57,66 +57,59 @@ namespace UDPServer
         {
             for (; ; )
             {
-                UdpClient udpClient = new UdpClient();
-                IPAddress address = IPAddress.Parse(IPAddress.Broadcast.ToString());  //get broadcast address
+                UdpClient hashSender = new UdpClient();
+                IPAddress bcAddress = IPAddress.Parse(IPAddress.Broadcast.ToString());  //get broadcast address
                 Byte[] sendBytes = new Byte[1024]; 
 
-                udpClient.Connect(address, 8008);
+                hashSender.Connect(bcAddress, 8008);
                 sendBytes = Encoding.ASCII.GetBytes(Vars.hash);
-                udpClient.Send(sendBytes, sendBytes.GetLength(0)); //send hash to port 8008 on broadcast
+                hashSender.Send(sendBytes, sendBytes.GetLength(0)); //send hash to port 8008
                 Thread.Sleep(1000); //sleep so we don't flood the queue
             }
         }
 
         static void sendPos() 
         {
-            UdpClient udpClient2 = new UdpClient();
+            UdpClient posSender = new UdpClient();
             Byte[] sendBytes = new Byte[1024]; 
-            IPAddress address = IPAddress.Parse(IPAddress.Broadcast.ToString());
-            udpClient2.Connect(address, 8009);
+            IPAddress bcAddress = IPAddress.Parse(IPAddress.Broadcast.ToString());
+            posSender.Connect(bcAddress, 8009);
 
             for (; ; )
             {
                 sendBytes = Encoding.ASCII.GetBytes(Vars.crackPos.ToString());
-                udpClient2.Send(sendBytes, sendBytes.GetLength(0)); 
+                posSender.Send(sendBytes, sendBytes.GetLength(0)); 
                 Thread.Sleep(1000); //sleep for 1 second
             }
         }
 
         static void Listener() 
         {
-
-            UdpClient udpClient3 = new UdpClient(8010);
+            UdpClient cliListener = new UdpClient(8010);
             string returnData = "";
 
             Byte[] recieveBytes = new Byte[1024];
-            IPEndPoint remoteIPEndPoint = new IPEndPoint(IPAddress.Any, 8010);
+            IPEndPoint listenerEndPoint = new IPEndPoint(IPAddress.Any, 8010);
 
-            recieveBytes = udpClient3.Receive(ref remoteIPEndPoint);
+            recieveBytes = cliListener.Receive(ref listenerEndPoint);
             returnData = Encoding.ASCII.GetString(recieveBytes);
             
-
-            if (returnData.Substring(0, 4) == "next")
+            if (returnData.Substring(0, 4) == "next") //check if the client has found the hash
             {
                 Vars.crackPos = Vars.crackPos + Vars.crackInt;
-                Log("Sent to Client: " + Vars.crackPos.ToString());
-                
-                //handle found hash conditions here
-                //split the string recieved from client to find the cleartext
+                Log("Checked Up To: " + Vars.crackPos.ToString()); //log on position recieved
             }
             else
             {
-                Log("Hash Found: " + returnData.Substring(6).ToString());
+                Log("Hash Found: " + returnData.Substring(6).ToString()); //log on hash found
                 Console.WriteLine("Hash Found: " + returnData.Substring(6).ToString());
-                Thread.CurrentThread.Abort();
+                Thread.CurrentThread.Abort(); //kill the thread
             }
 
-            //Vars.crackPos = Convert.ToInt32(returnData);
-            Console.WriteLine("Next Offering: " + Vars.crackPos); //position recieved from client + 1mil
+            Console.WriteLine("Next Offering: " + Vars.crackPos); //position offered to the next client that connects
 
-            udpClient3.Close();
-
-            Listener();
+            cliListener.Close();
+            Listener(); //recursive call
         }
 
         static void Log(string data)
