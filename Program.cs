@@ -22,6 +22,9 @@ namespace UDPServer
 
         static void Main(string[] args)
         {
+            //check if there is already a log
+            logCheck();
+
             //make all the threads
             Thread hashThread = null;
             Thread posThread = null; 
@@ -51,6 +54,14 @@ namespace UDPServer
             Console.ReadLine();
             
             Environment.Exit(0);  //kill the application and all threads
+        }
+
+        static void logCheck()
+        {
+            if (File.Exists(Vars.logPath))
+            {
+                Vars.crackPos = Convert.ToInt32(File.ReadLines(Vars.logPath).Last().Substring(9));
+            }
         }
 
         static void sendHash()
@@ -97,7 +108,7 @@ namespace UDPServer
             if (returnData.Substring(0, 4) == "next") //check if the client has found the hash
             {
                 Vars.crackPos = Vars.crackPos + Vars.crackInt;
-                Log("Checked Up To: " + Vars.crackPos.ToString()); //log on position recieved
+                Log("Position: " + Vars.crackPos.ToString()); //log on position recieved
             }
             else
             {
