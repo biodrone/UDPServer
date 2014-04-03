@@ -68,7 +68,8 @@ namespace UDPServer
             }
             catch
             {
-                Console.WriteLine("#####Log File Exists With Hash Already Cracked. Check For Clear Text!#####");
+                Console.WriteLine("#####Log File Exists With Hash Already Cracked. Check For Clear Text!#####"); //notify server of hash already found
+                Vars.hash = "found"; //disconnect clients immediately so as not to waste any time
             }
         }
 
