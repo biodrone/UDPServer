@@ -147,7 +147,8 @@ namespace UDPServer
                     Log("Hash Found: " + returnData.Substring(6).ToString()); //log on hash found
                     Console.WriteLine("Hash Found: " + returnData.Substring(6).ToString());
                     Vars.hash = "found"; //sets the hash to found so that the clients abort
-                    Thread.CurrentThread.Abort(); //kill the thread
+                    Thread.Sleep(10000);
+                    Environment.Exit(0); //kill it with fire
                 }
 
                 Console.WriteLine("Next Offering: " + Vars.crackPos); //position offered to the next client that connects
