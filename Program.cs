@@ -28,7 +28,6 @@ namespace UDPServer
             Thread ThreadListen = null;
             
             Console.WriteLine("Server has Started");
-            Console.WriteLine("HERE COMES THE MOOOOONEEEEEEY");
 
             //bind all the threads
             ThreadHash = new Thread(new ThreadStart(sendHash));
@@ -95,7 +94,7 @@ namespace UDPServer
 
             recieveBytes = udpClient3.Receive(ref remoteIPEndPoint);
             returnData = Encoding.ASCII.GetString(recieveBytes);
-            Console.WriteLine(returnData);
+            
 
             if (returnData.Substring(0, 4) == "next")
             {
@@ -107,8 +106,8 @@ namespace UDPServer
             }
             else
             {
-                Console.WriteLine("FOUND BITCH");
                 Log("Hash Found: " + returnData.Substring(6).ToString());
+                Console.WriteLine("Hash Found: " + returnData.Substring(6).ToString());
                 Thread.CurrentThread.Abort();
             }
 
