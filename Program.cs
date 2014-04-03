@@ -144,9 +144,16 @@ namespace UDPServer
 
         static void Log(string data)
         {
-            System.IO.StreamWriter sr = new System.IO.StreamWriter(Vars.logPath, true);
-            sr.WriteLine(data); //writes current lowest position
-            sr.Close();
+            try
+            {
+                System.IO.StreamWriter sr = new System.IO.StreamWriter(Vars.logPath, true);
+                sr.WriteLine(data); //writes current lowest position
+                sr.Close();
+            }
+            catch
+            {
+                Console.WriteLine("Logging Failed");
+            }
         }
     }
 }
