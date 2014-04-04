@@ -13,8 +13,7 @@ namespace UDPServer
     {
         public class Vars //place for all the global variables
         {
-            //public static string hash = "e9b8240f02d8f1599d85c9496a86f965"; //proper assignment hash - 412819815
-            public static string hash = "fcea920f7412b5da7be0cf42b8c93759"; //1234567
+            public static string hash = "e9b8240f02d8f1599d85c9496a86f965"; //assignment hash - 412819815
             public static string logPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\test\\udpLog.txt";
             public static int crackPos = 0;
             public static int crackInt = 1000000;
